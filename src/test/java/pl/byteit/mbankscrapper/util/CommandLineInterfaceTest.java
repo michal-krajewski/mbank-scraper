@@ -5,22 +5,19 @@ import org.junit.jupiter.api.Test;
 import pl.byteit.mbankscrapper.MockUserInput;
 import pl.byteit.mbankscrapper.operation.mbank.account.SavingAccountInfo;
 
-import java.lang.reflect.Field;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Index.atIndex;
-import static pl.byteit.mbankscrapper.MockUserInput.mockUserInput;
-import static pl.byteit.mbankscrapper.operation.mbank.account.AccountTestUtil.savingAccountInfo;
+import static pl.byteit.mbankscrapper.operation.mbank.account.AccountInfoTestFactory.savingAccountInfo;
 
 class CommandLineInterfaceTest {
 
 	private static final String MOCKED_INPUT = "mocked-input";
 
-	private MockUserInput mockUserInput = mockUserInput();
+	private MockUserInput mockUserInput = new MockUserInput();
 	private CommandLineInterface cli;
 	private static List<String> mockPrinter;
 

@@ -54,8 +54,7 @@ class DefaultHttpClientTest {
 	void shouldSendRequestWithNoResponseExpected() {
 		wireMockServer.stubFor(get(urlEqualTo(GET_PATH)));
 
-		httpClient.get(GET_URL)
-				.perform();
+		httpClient.get(GET_URL).perform();
 
 		verify(1, getRequestedFor(urlEqualTo(GET_PATH)));
 	}
@@ -83,8 +82,7 @@ class DefaultHttpClientTest {
 						.willReturn(aResponse().withBody(standardAccountInfoJsonBody()))
 		);
 
-		StandardAccountInfo accountInfo = httpClient.get(GET_URL)
-				.perform(StandardAccountInfo.class);
+		StandardAccountInfo accountInfo = httpClient.get(GET_URL).perform(StandardAccountInfo.class);
 
 		verify(1, getRequestedFor(urlEqualTo(GET_PATH)));
 		assertThatStandardAccountInfo(accountInfo)
@@ -130,13 +128,12 @@ class DefaultHttpClientTest {
 	void shouldSendPostWithEmptyJsonBody() {
 		wireMockServer.stubFor(post(urlEqualTo(POST_PATH)));
 
-		httpClient.post(POST_URL)
-				.perform();
+		httpClient.post(POST_URL).perform();
 
 		verify(
 				1,
 				postRequestedFor(urlEqualTo(POST_PATH))
-				.withRequestBody(equalTo("{}"))
+						.withRequestBody(equalTo("{}"))
 		);
 	}
 

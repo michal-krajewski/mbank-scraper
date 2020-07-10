@@ -42,4 +42,5 @@ public class SavingAccountInfo implements Printable {
 	public String print() {
 		return String.format("Name: %-36s Balance: %s %s", name, amount, currency);
 	}
+
 }

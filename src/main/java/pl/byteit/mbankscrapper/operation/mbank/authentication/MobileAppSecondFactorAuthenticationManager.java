@@ -9,11 +9,11 @@ import pl.byteit.mbankscrapper.util.CommandLineInterface;
 
 public class MobileAppSecondFactorAuthenticationManager implements SecondFactorAuthenticationManager {
 
-	private static final String FETCH_AUTHENTICATION_ID_URL = "https://online.mbank.pl/pl/Sca/GetScaAuthorizationData";
-	private static final String START_SECOND_FACTOR_AUTHENTICATION_URL = "https://online.mbank.pl/api/auth/initprepare";
-	private static final String CHECK_AUTHENTICATION_STATUS_URL = "https://online.mbank.pl/api/auth/status";
-	private static final String EXECUTE_AUTHENTICATION_URL = "https://online.mbank.pl/api/auth/execute";
-	private static final String FINALIZE_AUTHENTICATION_URL = "https://online.mbank.pl/pl/Sca/FinalizeAuthorization";
+	public static final String FETCH_AUTHENTICATION_ID_URL = "https://online.mbank.pl/pl/Sca/GetScaAuthorizationData";
+	public static final String START_SECOND_FACTOR_AUTHENTICATION_URL = "https://online.mbank.pl/api/auth/initprepare";
+	public static final String CHECK_AUTHENTICATION_STATUS_URL = "https://online.mbank.pl/api/auth/status";
+	public static final String EXECUTE_AUTHENTICATION_URL = "https://online.mbank.pl/api/auth/execute";
+	public static final String FINALIZE_AUTHENTICATION_URL = "https://online.mbank.pl/pl/Sca/FinalizeAuthorization";
 	private static final int MAX_CHECKING_STATUS_ATTEMPTS = 15;
 
 	private final HttpClient httpClient;

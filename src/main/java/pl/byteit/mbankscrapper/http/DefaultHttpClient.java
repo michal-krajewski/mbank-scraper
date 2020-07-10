@@ -19,11 +19,13 @@ public class DefaultHttpClient implements HttpClient {
 		this.client = client;
 	}
 
-	@Override public RequestBuilder post(String url) {
+	@Override
+	public RequestBuilder post(String url) {
 		return HttpRequestBuilder.post(url, client);
 	}
 
-	@Override public RequestBuilder get(String url) {
+	@Override
+	public RequestBuilder get(String url) {
 		return HttpRequestBuilder.get(url, client);
 	}
 
@@ -53,31 +55,37 @@ public class DefaultHttpClient implements HttpClient {
 			return new HttpRequestBuilder(okHttpClient, GET, requestUrl);
 		}
 
-		@Override public RequestBuilder withJsonBody(Object body) {
+		@Override
+		public RequestBuilder withJsonBody(Object body) {
 			builder.method(method, RequestBody.create(JSON_MEDIA_TYPE, asJson(body)));
 			containsCustomBody = true;
 			return this;
 		}
 
-		@Override public RequestBuilder withHeader(HttpHeader header) {
+		@Override
+		public RequestBuilder withHeader(HttpHeader header) {
 			builder.header(header.getName(), header.getValue());
 			return this;
 		}
 
-		@Override public RequestBuilder withResponsePreprocessor(Function<String, String> responsePreprocessor) {
+		@Override
+		public RequestBuilder withResponsePreprocessor(Function<String, String> responsePreprocessor) {
 			this.responsePreprocessor = responsePreprocessor;
 			return this;
 		}
 
-		@Override public void perform() {
+		@Override
+		public void perform() {
 			executeCall();
 		}
 
-		@Override public <T> T perform(Class<T> responseType) {
+		@Override
+		public <T> T perform(Class<T> responseType) {
 			return perform(asTypeReference(responseType));
 		}
 
-		@Override public <T> T perform(TypeReference<T> responseType) {
+		@Override
+		public <T> T perform(TypeReference<T> responseType) {
 			Response response = executeCall();
 
 			String processedResponse = processResponse(response);

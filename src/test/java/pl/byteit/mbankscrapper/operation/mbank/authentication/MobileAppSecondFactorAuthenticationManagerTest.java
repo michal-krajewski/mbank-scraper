@@ -17,15 +17,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static pl.byteit.mbankscrapper.ResourcesUtil.loadFileFromResourcesAsString;
+import static pl.byteit.mbankscrapper.operation.mbank.authentication.MobileAppSecondFactorAuthenticationManager.*;
 import static pl.byteit.mbankscrapper.util.JsonParser.asJson;
 
 class MobileAppSecondFactorAuthenticationManagerTest {
 
-	private static final String FETCH_AUTHENTICATION_ID_URL = "https://online.mbank.pl/pl/Sca/GetScaAuthorizationData";
-	private static final String START_SECOND_FACTOR_AUTHENTICATION_URL = "https://online.mbank.pl/api/auth/initprepare";
-	private static final String CHECK_AUTHENTICATION_STATUS_URL = "https://online.mbank.pl/api/auth/status";
-	private static final String EXECUTE_AUTHENTICATION_URL = "https://online.mbank.pl/api/auth/execute";
-	private static final String FINALIZE_AUTHENTICATION_URL = "https://online.mbank.pl/pl/Sca/FinalizeAuthorization";
 	private static final RequestVerificationToken TOKEN = new RequestVerificationToken("token-value");
 
 	@Mock

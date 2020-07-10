@@ -3,7 +3,7 @@ package pl.byteit.mbankscrapper.operation.mbank.account;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 
-public class AccountTestUtil {
+public class AccountInfoTestFactory {
 
 	public static SavingAccountInfo savingAccountInfo(String name, String linkedAccountNumber, String money, String currency) {
 		try {

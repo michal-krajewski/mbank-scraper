@@ -24,16 +24,13 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static pl.byteit.mbankscrapper.ResourcesUtil.loadFileFromResourcesAsString;
-import static pl.byteit.mbankscrapper.operation.mbank.account.AccountTestUtil.savingAccountInfo;
-import static pl.byteit.mbankscrapper.operation.mbank.account.AccountTestUtil.standardAccountInfo;
+import static pl.byteit.mbankscrapper.operation.mbank.MbankOperationManager.*;
+import static pl.byteit.mbankscrapper.operation.mbank.account.AccountInfoTestFactory.savingAccountInfo;
+import static pl.byteit.mbankscrapper.operation.mbank.account.AccountInfoTestFactory.standardAccountInfo;
 import static pl.byteit.mbankscrapper.util.JsonParser.asJson;
 
 class MbankOperationManagerTest {
 
-	private static final String GET_STANDARD_ACCOUNTS_URL = "https://online.mbank.pl/pl/MyDesktop/Dashboard/GetProducts";
-	private static final String LOGIN_URL = "https://online.mbank.pl/pl/LoginMain/Account/JsonLogin";
-	private static final String GET_REQUEST_VERIFICATION_TOKEN_URL = "https://online.mbank.pl/pl/setup/data";
-	private static final String GET_SAVING_ACCOUNTS_URL = "https://online.mbank.pl/pl/SavingGoals/Home/GetSavingProducts";
 	private static final Credentials CREDENTIALS = new Credentials("test".toCharArray(), "passwd".toCharArray());
 	private static final RequestVerificationToken TOKEN = new RequestVerificationToken("token-value");
 

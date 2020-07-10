@@ -17,10 +17,10 @@ import static pl.byteit.mbankscrapper.util.TypeUtil.listTypeOf;
 
 public class MbankOperationManager implements BankOperationManager {
 
-	private static final String GET_STANDARD_ACCOUNTS_URL = "https://online.mbank.pl/pl/MyDesktop/Dashboard/GetProducts";
-	private static final String LOGIN_URL = "https://online.mbank.pl/pl/LoginMain/Account/JsonLogin";
-	private static final String GET_REQUEST_VERIFICATION_TOKEN_URL = "https://online.mbank.pl/pl/setup/data";
-	private static final String GET_SAVING_ACCOUNTS_URL = "https://online.mbank.pl/pl/SavingGoals/Home/GetSavingProducts";
+	public static final String GET_STANDARD_ACCOUNTS_URL = "https://online.mbank.pl/pl/MyDesktop/Dashboard/GetProducts";
+	public static final String LOGIN_URL = "https://online.mbank.pl/pl/LoginMain/Account/JsonLogin";
+	public static final String GET_REQUEST_VERIFICATION_TOKEN_URL = "https://online.mbank.pl/pl/setup/data";
+	public static final String GET_SAVING_ACCOUNTS_URL = "https://online.mbank.pl/pl/SavingGoals/Home/GetSavingProducts";
 
 	private final HttpClient httpClient;
 	private final CommandLineInterface cli;

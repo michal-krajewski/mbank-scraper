@@ -1,7 +1,6 @@
 package pl.byteit.mbankscrapper.operation.mbank;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import pl.byteit.mbankscrapper.http.HttpHeader;
@@ -22,7 +21,8 @@ public class RequestVerificationToken {
 		return new HttpHeader("x-request-verification-token", requestVerificationToken);
 	}
 
-	@Override public boolean equals(Object o) {
+	@Override
+	public boolean equals(Object o) {
 		if (this == o)
 			return true;
 		if (!(o instanceof RequestVerificationToken))
@@ -31,7 +31,8 @@ public class RequestVerificationToken {
 		return requestVerificationToken.equals(that.requestVerificationToken);
 	}
 
-	@Override public int hashCode() {
+	@Override
+	public int hashCode() {
 		return Objects.hash(requestVerificationToken);
 	}
 }

@@ -1,13 +1,11 @@
 package pl.byteit.mbankscrapper.util;
 
 import java.util.Collection;
-import java.util.Scanner;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class CommandLineInterface {
 
-	private Scanner scanner;
 	private Supplier<String> inputSupplier;
 	private final Consumer<String> printer;
 

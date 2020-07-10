@@ -44,7 +44,7 @@ public class HttpClientMock implements HttpClient {
 	}
 
 	public MockRequestBuilderAssert verify(String url) {
-		return verify( 1, url).get(0);
+		return verify(1, url).get(0);
 	}
 
 	public List<MockRequestBuilderAssert> verify(int requestAmount, String url) {
