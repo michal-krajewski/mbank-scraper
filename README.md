@@ -1,4 +1,4 @@
-# MBank scrapper
+# MBank scraper
 Simple app fetching bank accounts data (number, balance) and linked saving accounts.  
 
 ## Build
