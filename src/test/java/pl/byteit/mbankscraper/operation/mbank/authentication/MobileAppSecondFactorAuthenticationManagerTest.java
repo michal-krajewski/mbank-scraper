@@ -11,13 +11,16 @@ import pl.byteit.mbankscraper.util.Await;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static pl.byteit.mbankscraper.ResourcesUtil.loadFileFromResourcesAsString;
+import static pl.byteit.mbankscraper.TestJsons.authenticationIdentifier;
+import static pl.byteit.mbankscraper.TestJsons.startAuthentication;
 import static pl.byteit.mbankscraper.operation.mbank.Requests.*;
 import static pl.byteit.mbankscraper.util.JsonParser.asJson;
 
 class MobileAppSecondFactorAuthenticationManagerTest {
 
 	private static final RequestVerificationToken TOKEN = new RequestVerificationToken("token-value");
+	private static final String AUTH_ID = "auth-id";
+	private static final String TRAN_ID = "tran-id";
 
 	@Mock
 	private Await await;
@@ -34,8 +37,8 @@ class MobileAppSecondFactorAuthenticationManagerTest {
 
 	@Test
 	void shouldProperlyAuthenticate() {
-		mockClient.mockResponse(FETCH_AUTHENTICATION_ID_URL, loadFileFromResourcesAsString("authentication-identifier.json"));
-		mockClient.mockResponse(START_SECOND_FACTOR_AUTHENTICATION_URL, loadFileFromResourcesAsString("start-authentication.json"));
+		mockClient.mockResponse(FETCH_AUTHENTICATION_ID_URL, authenticationIdentifier(AUTH_ID));
+		mockClient.mockResponse(START_SECOND_FACTOR_AUTHENTICATION_URL, startAuthentication(TRAN_ID));
 		mockClient.mockResponse(CHECK_AUTHENTICATION_STATUS_URL, asJson(new SecondFactorAuthenticationStatus("Authorized")));
 
 		secondFactorAuthenticationManager.authenticate(TOKEN);
@@ -69,8 +72,8 @@ class MobileAppSecondFactorAuthenticationManagerTest {
 
 	@Test
 	void shouldThrowAuthenticationExceptionWhenAuthenticationFailed() {
-		mockClient.mockResponse(FETCH_AUTHENTICATION_ID_URL, loadFileFromResourcesAsString("authentication-identifier.json"));
-		mockClient.mockResponse(START_SECOND_FACTOR_AUTHENTICATION_URL, loadFileFromResourcesAsString("start-authentication.json"));
+		mockClient.mockResponse(FETCH_AUTHENTICATION_ID_URL, authenticationIdentifier("auth-id"));
+		mockClient.mockResponse(START_SECOND_FACTOR_AUTHENTICATION_URL, startAuthentication("tran-id"));
 		mockClient.mockResponse(CHECK_AUTHENTICATION_STATUS_URL, asJson(new SecondFactorAuthenticationStatus("Failed")));
 
 		assertThrows(
@@ -86,8 +89,8 @@ class MobileAppSecondFactorAuthenticationManagerTest {
 
 	@Test
 	void shouldThrowAuthenticationExceptionWhenExceededCheckingStatusAttempts() {
-		mockClient.mockResponse(FETCH_AUTHENTICATION_ID_URL, loadFileFromResourcesAsString("authentication-identifier.json"));
-		mockClient.mockResponse(START_SECOND_FACTOR_AUTHENTICATION_URL, loadFileFromResourcesAsString("start-authentication.json"));
+		mockClient.mockResponse(FETCH_AUTHENTICATION_ID_URL, authenticationIdentifier("auth-id"));
+		mockClient.mockResponse(START_SECOND_FACTOR_AUTHENTICATION_URL, startAuthentication("tran-id"));
 		mockClient.mockResponse(CHECK_AUTHENTICATION_STATUS_URL, asJson(new SecondFactorAuthenticationStatus("Prepared")));
 
 		assertThrows(

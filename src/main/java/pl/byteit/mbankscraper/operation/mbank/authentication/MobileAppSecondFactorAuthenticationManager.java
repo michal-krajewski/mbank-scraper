@@ -35,8 +35,10 @@ public class MobileAppSecondFactorAuthenticationManager implements SecondFactorA
 				.perform(SecondFactorAuthenticationIdentifier.class);
 	}
 
-	private SecondFactorAuthenticationInfo startSecondFactorAuthentication(SecondFactorAuthenticationIdentifier identifier,
-			RequestVerificationToken requestVerificationToken) {
+	private SecondFactorAuthenticationInfo startSecondFactorAuthentication(
+			SecondFactorAuthenticationIdentifier identifier,
+			RequestVerificationToken requestVerificationToken
+	) {
 		return httpClient.post(START_SECOND_FACTOR_AUTHENTICATION_URL)
 				.withHeader(requestVerificationToken.asHeader())
 				.withJsonBody(StartSecondFactorAuthenticationRequest.withId(identifier))
@@ -62,8 +64,10 @@ public class MobileAppSecondFactorAuthenticationManager implements SecondFactorA
 				.perform(SecondFactorAuthenticationStatus.class);
 	}
 
-	private void finalizeAuthentication(RequestVerificationToken requestVerificationToken,
-			SecondFactorAuthenticationIdentifier identifier) {
+	private void finalizeAuthentication(
+			RequestVerificationToken requestVerificationToken,
+			SecondFactorAuthenticationIdentifier identifier
+	) {
 		httpClient.post(EXECUTE_AUTHENTICATION_URL)
 				.withHeader(requestVerificationToken.asHeader())
 				.perform();

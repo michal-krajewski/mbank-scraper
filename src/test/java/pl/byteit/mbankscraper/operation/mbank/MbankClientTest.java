@@ -3,6 +3,7 @@ package pl.byteit.mbankscraper.operation.mbank;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import pl.byteit.mbankscraper.TestJsons.*;
 import pl.byteit.mbankscraper.http.mock.HttpClientMock;
 import pl.byteit.mbankscraper.operation.AccountInfo;
 import pl.byteit.mbankscraper.operation.AccountInfo.AccountType;
@@ -18,7 +19,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static pl.byteit.mbankscraper.ResourcesUtil.loadFileFromResourcesAsString;
+import static pl.byteit.mbankscraper.TestJsons.*;
 import static pl.byteit.mbankscraper.operation.AccountInfo.AccountType.SAVING;
 import static pl.byteit.mbankscraper.operation.AccountInfo.AccountType.STANDARD;
 import static pl.byteit.mbankscraper.operation.AuthenticationResult.AuthenticationStatus.SECOND_FACTOR_AUTHENTICATION_REQUIRED;
@@ -33,7 +34,8 @@ class MbankClientTest {
 	private static final String SECOND_FACTOR_NOT_REQUIRED_REDIRECT_URL = "/dashboard";
 
 	private static final Credentials CREDENTIALS = new Credentials("test".toCharArray(), "passwd".toCharArray());
-	private static final RequestVerificationToken TOKEN = new RequestVerificationToken("token-value");
+	private static final String TOKEN_VALUE = "token-value";
+	private static final RequestVerificationToken TOKEN = new RequestVerificationToken(TOKEN_VALUE);
 
 	@Mock
 	private SecondFactorAuthenticationManager secondFactorAuthenticationManager;
@@ -91,9 +93,14 @@ class MbankClientTest {
 
 	@Test
 	void shouldFetchAccountData() {
-		mockClient.mockResponse(GET_REQUEST_VERIFICATION_TOKEN_URL, loadFileFromResourcesAsString("anti-forgery-token.json"));
-		mockClient.mockResponse(GET_STANDARD_ACCOUNTS_URL, loadFileFromResourcesAsString("standard-accounts.json"));
-		mockClient.mockResponse(GET_SAVING_ACCOUNTS_URL, loadFileFromResourcesAsString("saving-accounts.json"));
+		String standardAccountNumber = "11 2222 3333 4444 5555 6666 7777";
+		String standardAccountBalance = "9280.55";
+		String currency = "PLN";
+		SavingAccountData savingAccount1 = new SavingAccountData(standardAccountNumber, "12333.66", "Saving1");
+		SavingAccountData savingAccount2 = new SavingAccountData(standardAccountNumber, "2500.00", "Saving2");
+		mockClient.mockResponse(GET_REQUEST_VERIFICATION_TOKEN_URL, antiForgeryToken(TOKEN_VALUE));
+		mockClient.mockResponse(GET_STANDARD_ACCOUNTS_URL, standardAccounts(standardAccountNumber, standardAccountBalance, currency));
+		mockClient.mockResponse(GET_SAVING_ACCOUNTS_URL, savingAccounts(savingAccount1, savingAccount2));
 
 		List<AccountInfo> accounts = operationManager.getAccounts();
 
@@ -112,9 +119,9 @@ class MbankClientTest {
 				.wasPerformed();
 		assertThat(accounts)
 				.containsExactly(
-						accountInfo("11 2222 3333 4444 5555 6666 7777", "9280.55", "PLN", STANDARD),
-						accountInfo("Saving1", "12333.66", "PLN", SAVING),
-						accountInfo("Saving2", "2500.00", "PLN", SAVING)
+						accountInfo(standardAccountNumber, standardAccountBalance, currency, STANDARD),
+						accountInfo(savingAccount1.name, savingAccount1.currentAmount, currency, SAVING),
+						accountInfo(savingAccount2.name, savingAccount2.currentAmount, currency, SAVING)
 				);
 	}
 

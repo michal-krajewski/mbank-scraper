@@ -15,7 +15,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static java.lang.Integer.parseInt;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static pl.byteit.mbankscraper.ResourcesUtil.loadFileFromResourcesAsString;
+import static pl.byteit.mbankscraper.TestJsons.singleStandardAccount;
 import static pl.byteit.mbankscraper.operation.mbank.account.StandardAccountInfoAssert.assertThatStandardAccountInfo;
 
 class OkHttpClientWrapperTest {
@@ -25,6 +25,7 @@ class OkHttpClientWrapperTest {
 	private static final String HOST = "http://localhost";
 	private static final String GET_PATH = "/get";
 	private static final String POST_PATH = "/post";
+	public static final String STANDARD_CURRENCY = "PLN";
 
 	private static WireMockServer mockServer;
 	private static HttpClient httpClient;
@@ -78,7 +79,9 @@ class OkHttpClientWrapperTest {
 	void shouldSendRequestAndParseResponseIntoObject() {
 		mockServer.stubFor(
 				get(GET_PATH)
-						.willReturn(aResponse().withBody(standardAccountInfoJsonBody()))
+						.willReturn(aResponse()
+								.withBody(singleStandardAccount(ACCOUNT_NUMBER, ACCOUNT_BALANCE.toString(), STANDARD_CURRENCY))
+						)
 		);
 
 		StandardAccountInfo accountInfo = httpClient.get(urlFor(GET_PATH)).perform(StandardAccountInfo.class);
@@ -86,7 +89,7 @@ class OkHttpClientWrapperTest {
 		mockServer.verify(1, getRequestedFor(urlEqualTo(GET_PATH)));
 		assertThatStandardAccountInfo(accountInfo)
 				.hasNumber(ACCOUNT_NUMBER)
-				.hasCurrency("PLN")
+				.hasCurrency(STANDARD_CURRENCY)
 				.hasBalance(ACCOUNT_BALANCE);
 	}
 
@@ -94,7 +97,9 @@ class OkHttpClientWrapperTest {
 	void shouldSendRequestAndParseResponseIntoObjectWithResponsePreprocessing() {
 		mockServer.stubFor(
 				get(GET_PATH)
-						.willReturn(aResponse().withBody(standardAccountInfoJsonBody()))
+						.willReturn(aResponse()
+								.withBody(singleStandardAccount(ACCOUNT_NUMBER, ACCOUNT_BALANCE.toString(), STANDARD_CURRENCY))
+						)
 		);
 
 		StandardAccountInfo accountInfo = httpClient.get(urlFor(GET_PATH))
@@ -149,10 +154,6 @@ class OkHttpClientWrapperTest {
 				postRequestedFor(urlEqualTo(POST_PATH))
 						.withRequestBody(equalTo("{\"UserName\":\"user\",\"Password\":\"passwd\"}"))
 		);
-	}
-
-	private static String standardAccountInfoJsonBody() {
-		return loadFileFromResourcesAsString("single-standard-account.json");
 	}
 
 	private static Credentials credentials(String username, String password) {
