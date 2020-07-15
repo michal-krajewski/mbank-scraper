@@ -6,19 +6,17 @@ import pl.byteit.mbankscraper.operation.mbank.account.SavingAccountInfo;
 import pl.byteit.mbankscraper.operation.mbank.account.StandardAccountInfo;
 import pl.byteit.mbankscraper.operation.mbank.authentication.LoginResponse;
 import pl.byteit.mbankscraper.operation.mbank.authentication.SecondFactorAuthenticationManager;
+import pl.byteit.mbankscraper.util.TypeReferences;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static pl.byteit.mbankscraper.operation.mbank.Requests.*;
 import static pl.byteit.mbankscraper.util.JsonParser.getFieldRawValueAsString;
-import static pl.byteit.mbankscraper.util.TypeUtil.listTypeOf;
 
 public class MbankClient implements BankClient {
 
-	public static final String GET_STANDARD_ACCOUNTS_URL = "https://online.mbank.pl/pl/MyDesktop/Dashboard/GetProducts";
-	public static final String LOGIN_URL = "https://online.mbank.pl/pl/LoginMain/Account/JsonLogin";
-	public static final String GET_REQUEST_VERIFICATION_TOKEN_URL = "https://online.mbank.pl/pl/setup/data";
-	public static final String GET_SAVING_ACCOUNTS_URL = "https://online.mbank.pl/pl/SavingGoals/Home/GetSavingProducts";
+
 
 	private final HttpClient httpClient;
 	private final SecondFactorAuthenticationManager secondFactorAuthenticationManager;
@@ -71,14 +69,14 @@ public class MbankClient implements BankClient {
 		return httpClient.post(GET_STANDARD_ACCOUNTS_URL)
 				.withHeader(requestVerificationToken.asHeader())
 				.withResponsePreprocessor(MbankClient::extractListOfStandardAccounts)
-				.perform(listTypeOf(StandardAccountInfo.class));
+				.perform(TypeReferences.listTypeOf(StandardAccountInfo.class));
 	}
 
 	private List<SavingAccountInfo> getSavingAccounts(RequestVerificationToken requestVerificationToken) {
 		return httpClient.get(GET_SAVING_ACCOUNTS_URL)
 				.withHeader(requestVerificationToken.asHeader())
 				.withResponsePreprocessor(MbankClient::extractListOfSavingAccounts)
-				.perform(listTypeOf(SavingAccountInfo.class));
+				.perform(TypeReferences.listTypeOf(SavingAccountInfo.class));
 	}
 
 	private static List<AccountInfo> mapToAccountInfoList(

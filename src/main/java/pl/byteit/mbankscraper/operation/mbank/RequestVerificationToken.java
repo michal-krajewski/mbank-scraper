@@ -3,7 +3,7 @@ package pl.byteit.mbankscraper.operation.mbank;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import pl.byteit.mbankscraper.http.HttpHeader;
+import pl.byteit.mbankscraper.http.Header;
 
 import java.util.Objects;
 
@@ -17,8 +17,8 @@ public class RequestVerificationToken {
 		this.requestVerificationToken = requestVerificationToken;
 	}
 
-	public HttpHeader asHeader() {
-		return new HttpHeader("x-request-verification-token", requestVerificationToken);
+	public Header asHeader() {
+		return new Header("x-request-verification-token", requestVerificationToken);
 	}
 
 	@Override

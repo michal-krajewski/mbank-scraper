@@ -13,7 +13,7 @@ public interface HttpClient {
 	interface RequestBuilder {
 		RequestBuilder withJsonBody(Object body);
 
-		RequestBuilder withHeader(HttpHeader header);
+		RequestBuilder withHeader(Header header);
 
 		RequestBuilder withResponsePreprocessor(Function<String, String> responsePreprocessor);
 

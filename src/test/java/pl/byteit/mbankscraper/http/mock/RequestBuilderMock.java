@@ -2,23 +2,23 @@ package pl.byteit.mbankscraper.http.mock;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.assertj.core.api.AbstractAssert;
+import pl.byteit.mbankscraper.http.Header;
 import pl.byteit.mbankscraper.http.HttpClient;
-import pl.byteit.mbankscraper.http.HttpHeader;
 import pl.byteit.mbankscraper.util.JsonParser;
+import pl.byteit.mbankscraper.util.TypeReferences;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static pl.byteit.mbankscraper.util.TypeUtil.asTypeReference;
 
 public class RequestBuilderMock implements HttpClient.RequestBuilder {
 
 	private final HttpClientMock httpClient;
 	private final String url;
 	private final String method;
-	private final List<HttpHeader> headers = new ArrayList<>();
+	private final List<Header> headers = new ArrayList<>();
 	private Object body = null;
 	private boolean customPreprocessor = false;
 	private boolean performed = false;
@@ -36,7 +36,7 @@ public class RequestBuilderMock implements HttpClient.RequestBuilder {
 	}
 
 	@Override
-	public HttpClient.RequestBuilder withHeader(HttpHeader header) {
+	public HttpClient.RequestBuilder withHeader(Header header) {
 		this.headers.add(header);
 		return this;
 	}
@@ -54,7 +54,7 @@ public class RequestBuilderMock implements HttpClient.RequestBuilder {
 
 	@Override
 	public <T> T perform(Class<T> responseType) {
-		return perform(asTypeReference(responseType));
+		return perform(TypeReferences.typeOf(responseType));
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class RequestBuilderMock implements HttpClient.RequestBuilder {
 			return this;
 		}
 
-		public MockRequestBuilderAssert hasHeaders(HttpHeader... headers) {
+		public MockRequestBuilderAssert hasHeaders(Header... headers) {
 			isNotNull();
 			assertThat(actual.headers).containsExactlyInAnyOrder(headers);
 			return this;

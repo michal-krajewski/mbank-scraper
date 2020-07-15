@@ -24,7 +24,7 @@ import static pl.byteit.mbankscraper.operation.AccountInfo.AccountType.STANDARD;
 import static pl.byteit.mbankscraper.operation.AuthenticationResult.AuthenticationStatus.SECOND_FACTOR_AUTHENTICATION_REQUIRED;
 import static pl.byteit.mbankscraper.operation.AuthenticationResult.AuthenticationStatus.SUCCESSFUL;
 import static pl.byteit.mbankscraper.operation.AuthenticationResult.SecondFactorAuthenticationType.MOBILE_APP;
-import static pl.byteit.mbankscraper.operation.mbank.MbankClient.*;
+import static pl.byteit.mbankscraper.operation.mbank.Requests.*;
 import static pl.byteit.mbankscraper.util.JsonParser.asJson;
 
 class MbankClientTest {

@@ -2,12 +2,12 @@ package pl.byteit.mbankscraper.http;
 
 import java.util.Objects;
 
-public class HttpHeader {
+public class Header {
 
 	private final String name;
 	private final String value;
 
-	public HttpHeader(String name, String value) {
+	public Header(String name, String value) {
 		this.name = name;
 		this.value = value;
 	}
@@ -24,9 +24,9 @@ public class HttpHeader {
 	public boolean equals(Object o) {
 		if (this == o)
 			return true;
-		if (!(o instanceof HttpHeader))
+		if (!(o instanceof Header))
 			return false;
-		HttpHeader header = (HttpHeader) o;
+		Header header = (Header) o;
 		return name.equals(header.name) &&
 				value.equals(header.value);
 	}

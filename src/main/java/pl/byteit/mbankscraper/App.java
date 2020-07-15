@@ -2,8 +2,8 @@ package pl.byteit.mbankscraper;
 
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
-import pl.byteit.mbankscraper.http.DefaultHttpClient;
 import pl.byteit.mbankscraper.http.HttpClient;
+import pl.byteit.mbankscraper.http.OkHttpClientWrapper;
 import pl.byteit.mbankscraper.operation.BankClient;
 import pl.byteit.mbankscraper.operation.mbank.MbankClient;
 import pl.byteit.mbankscraper.operation.mbank.authentication.MobileAppSecondFactorAuthenticationManager;
@@ -42,7 +42,7 @@ public class App {
 				.cookieJar(new JavaNetCookieJar(cookieManager))
 				.build();
 
-		return new DefaultHttpClient(okHttpClient);
+		return new OkHttpClientWrapper(okHttpClient);
 	}
 
 }

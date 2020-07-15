@@ -3,19 +3,19 @@ package pl.byteit.mbankscraper.http;
 import com.fasterxml.jackson.core.type.TypeReference;
 import okhttp3.*;
 import pl.byteit.mbankscraper.util.JsonParser;
+import pl.byteit.mbankscraper.util.TypeReferences;
 
 import java.io.IOException;
 import java.util.function.Function;
 
 import static pl.byteit.mbankscraper.util.JsonParser.asJson;
-import static pl.byteit.mbankscraper.util.TypeUtil.asTypeReference;
 
-public class DefaultHttpClient implements HttpClient {
+public class OkHttpClientWrapper implements HttpClient {
 	private static final MediaType JSON_MEDIA_TYPE = MediaType.get("application/json");
 
 	private final OkHttpClient client;
 
-	public DefaultHttpClient(OkHttpClient client) {
+	public OkHttpClientWrapper(OkHttpClient client) {
 		this.client = client;
 	}
 
@@ -63,7 +63,7 @@ public class DefaultHttpClient implements HttpClient {
 		}
 
 		@Override
-		public RequestBuilder withHeader(HttpHeader header) {
+		public RequestBuilder withHeader(Header header) {
 			builder.header(header.getName(), header.getValue());
 			return this;
 		}
@@ -81,7 +81,7 @@ public class DefaultHttpClient implements HttpClient {
 
 		@Override
 		public <T> T perform(Class<T> responseType) {
-			return perform(asTypeReference(responseType));
+			return perform(TypeReferences.typeOf(responseType));
 		}
 
 		@Override

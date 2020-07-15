@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.lang.reflect.Type;
 import java.util.List;
 
-public class TypeUtil {
+public class TypeReferences {
 
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -19,7 +19,7 @@ public class TypeUtil {
 		};
 	}
 
-	public static <T> TypeReference<T> asTypeReference(Class<T> aClass) {
+	public static <T> TypeReference<T> typeOf(Class<T> aClass) {
 		return new TypeReference<T>() {
 			@Override
 			public Type getType() {

@@ -10,7 +10,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static pl.byteit.mbankscraper.ResourcesUtil.loadFileFromResourcesAsString;
 import static pl.byteit.mbankscraper.operation.mbank.account.StandardAccountInfoAssert.assertThatStandardAccountInfo;
-import static pl.byteit.mbankscraper.util.TypeUtil.asTypeReference;
 
 class JsonParserTest {
 
@@ -35,7 +34,7 @@ class JsonParserTest {
 	void shouldDeserializeCorrectJsonToObject() {
 		StandardAccountInfo account = JsonParser.parse(
 				loadFileFromResourcesAsString("single-standard-account.json"),
-				asTypeReference(StandardAccountInfo.class)
+				TypeReferences.typeOf(StandardAccountInfo.class)
 		);
 
 		assertThatStandardAccountInfo(account)
@@ -48,7 +47,7 @@ class JsonParserTest {
 	void shouldThrowIllegalStateExceptionWhenJsonCannotBeDeserializedIntoObject() {
 		assertThrows(
 				IllegalStateException.class,
-				() -> JsonParser.parse("{\"field\":\"value\"}", asTypeReference(Credentials.class))
+				() -> JsonParser.parse("{\"field\":\"value\"}", TypeReferences.typeOf(Credentials.class))
 		);
 	}
 

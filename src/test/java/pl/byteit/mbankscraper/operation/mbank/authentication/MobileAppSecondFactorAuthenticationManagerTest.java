@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static pl.byteit.mbankscraper.ResourcesUtil.loadFileFromResourcesAsString;
-import static pl.byteit.mbankscraper.operation.mbank.authentication.MobileAppSecondFactorAuthenticationManager.*;
+import static pl.byteit.mbankscraper.operation.mbank.Requests.*;
 import static pl.byteit.mbankscraper.util.JsonParser.asJson;
 
 class MobileAppSecondFactorAuthenticationManagerTest {

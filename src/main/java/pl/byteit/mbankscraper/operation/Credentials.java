@@ -1,10 +1,13 @@
 package pl.byteit.mbankscraper.operation;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Credentials {
 
+	@JsonProperty("UserName")
 	private final char[] username;
+
+	@JsonProperty("Password")
 	private final char[] password;
 
 	public Credentials(char[] username, char[] password) {
@@ -12,13 +15,4 @@ public class Credentials {
 		this.password = password;
 	}
 
-	@JsonGetter("UserName")
-	private char[] getUsername() {
-		return username;
-	}
-
-	@JsonGetter("Password")
-	private char[] getPassword() {
-		return password;
-	}
 }
