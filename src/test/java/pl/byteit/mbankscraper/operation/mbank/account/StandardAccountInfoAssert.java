@@ -30,12 +30,8 @@ public class StandardAccountInfoAssert extends AbstractAssert<StandardAccountInf
 
 	public StandardAccountInfoAssert hasBalance(BigDecimal expectedBalance) {
 		isNotNull();
-		assertThat(extractAmountFromPrintedInfo()).isEqualTo(expectedBalance.toString());
+		assertThat(actual.getBalance()).isEqualTo(expectedBalance.toString());
 		return this;
-	}
-
-	private String extractAmountFromPrintedInfo() {
-		return actual.print().substring(54).split(" ")[0];
 	}
 
 }

@@ -1,11 +1,11 @@
 package pl.byteit.mbankscraper.operation.mbank.authentication;
 
 import pl.byteit.mbankscraper.http.HttpClient;
+import pl.byteit.mbankscraper.operation.AuthenticationResult;
 import pl.byteit.mbankscraper.operation.mbank.RequestVerificationToken;
 import pl.byteit.mbankscraper.operation.mbank.authentication.SecondFactorAuthenticationIdentifier.FinalizeAuthenticationRequest;
 import pl.byteit.mbankscraper.operation.mbank.authentication.SecondFactorAuthenticationInfo.TranId;
-import pl.byteit.mbankscraper.util.AwaitUtil;
-import pl.byteit.mbankscraper.util.CommandLineInterface;
+import pl.byteit.mbankscraper.util.Await;
 
 public class MobileAppSecondFactorAuthenticationManager implements SecondFactorAuthenticationManager {
 
@@ -17,24 +17,20 @@ public class MobileAppSecondFactorAuthenticationManager implements SecondFactorA
 	private static final int MAX_CHECKING_STATUS_ATTEMPTS = 15;
 
 	private final HttpClient httpClient;
-	private final CommandLineInterface cli;
-	private final AwaitUtil await;
+	private final Await await;
 
-	public MobileAppSecondFactorAuthenticationManager(HttpClient httpClient, CommandLineInterface cli, AwaitUtil await) {
+	public MobileAppSecondFactorAuthenticationManager(HttpClient httpClient, Await await) {
 		this.httpClient = httpClient;
-		this.cli = cli;
 		this.await = await;
 	}
 
 	@Override
-	public void authenticate(RequestVerificationToken requestVerificationToken) {
+	public AuthenticationResult authenticate(RequestVerificationToken requestVerificationToken) {
 		SecondFactorAuthenticationIdentifier authenticationId = fetchAuthenticationId();
 		SecondFactorAuthenticationInfo authenticationInfo = startSecondFactorAuthentication(authenticationId, requestVerificationToken);
-
-		cli.print("Waiting for 2FA. Check your " + authenticationInfo.getDeviceName() + " device.");
-
 		waitForAuthentication(requestVerificationToken, authenticationInfo);
 		finalizeAuthentication(requestVerificationToken, authenticationId);
+		return AuthenticationResult.successful();
 	}
 
 	private SecondFactorAuthenticationIdentifier fetchAuthenticationId() {
@@ -51,7 +47,7 @@ public class MobileAppSecondFactorAuthenticationManager implements SecondFactorA
 	}
 
 	private void waitForAuthentication(RequestVerificationToken verificationToken, SecondFactorAuthenticationInfo authenticationInfo) {
-		AuthenticationStatus authenticationStatus;
+		SecondFactorAuthenticationStatus authenticationStatus;
 		int attempt = 0;
 		do {
 			authenticationStatus = checkStatus(authenticationInfo.getTranId(), verificationToken);
@@ -59,15 +55,14 @@ public class MobileAppSecondFactorAuthenticationManager implements SecondFactorA
 			await.forSeconds(2);
 		}
 		while (authenticationStatus.isInProgress() && attempt < MAX_CHECKING_STATUS_ATTEMPTS);
-
 		verifyAuthenticationSucceed(authenticationStatus);
 	}
 
-	private AuthenticationStatus checkStatus(TranId tranId, RequestVerificationToken requestVerificationToken) {
+	private SecondFactorAuthenticationStatus checkStatus(TranId tranId, RequestVerificationToken requestVerificationToken) {
 		return httpClient.post(CHECK_AUTHENTICATION_STATUS_URL)
 				.withHeader(requestVerificationToken.asHeader())
 				.withJsonBody(tranId)
-				.perform(AuthenticationStatus.class);
+				.perform(SecondFactorAuthenticationStatus.class);
 	}
 
 	private void finalizeAuthentication(RequestVerificationToken requestVerificationToken,
@@ -82,9 +77,9 @@ public class MobileAppSecondFactorAuthenticationManager implements SecondFactorA
 				.perform();
 	}
 
-	private static void verifyAuthenticationSucceed(AuthenticationStatus authenticationStatus) {
-		if (!authenticationStatus.isSuccessful()) {
-			throw new AuthenticationException(authenticationStatus);
+	private static void verifyAuthenticationSucceed(SecondFactorAuthenticationStatus secondFactorAuthenticationStatus) {
+		if (!secondFactorAuthenticationStatus.isSuccessful()) {
+			throw new AuthenticationException(secondFactorAuthenticationStatus);
 		}
 	}
 

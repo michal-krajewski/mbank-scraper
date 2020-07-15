@@ -3,13 +3,15 @@ package pl.byteit.mbankscraper.operation.mbank.account;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import pl.byteit.mbankscraper.util.Printable;
+import pl.byteit.mbankscraper.operation.AccountInfo;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+import static pl.byteit.mbankscraper.operation.AccountInfo.AccountType.SAVING;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SavingAccountInfo implements Printable {
+public class SavingAccountInfo {
 
 	private final String name;
 	private final String linkedAccount;
@@ -38,9 +40,8 @@ public class SavingAccountInfo implements Printable {
 				);
 	}
 
-	@Override
-	public String print() {
-		return String.format("Name: %-36s Balance: %s %s", name, amount, currency);
+	public AccountInfo toAccountInfo() {
+		return new AccountInfo(name, amount, currency, SAVING);
 	}
 
 }

@@ -1,6 +1,6 @@
 package pl.byteit.mbankscraper.util;
 
-public class AwaitUtil {
+public class Await {
 
 	public void forSeconds(int seconds) {
 		try {

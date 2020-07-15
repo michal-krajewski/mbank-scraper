@@ -1,8 +1,12 @@
 package pl.byteit.mbankscraper.operation;
 
+import java.util.List;
+
 public interface BankClient {
 
-	void login(Credentials credentials);
+	AuthenticationResult login(Credentials credentials);
 
-	void getAccounts();
+	AuthenticationResult authenticateWithSecondFactor();
+
+	List<AccountInfo> getAccounts();
 }

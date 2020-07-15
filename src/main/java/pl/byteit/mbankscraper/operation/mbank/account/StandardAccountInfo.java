@@ -3,12 +3,14 @@ package pl.byteit.mbankscraper.operation.mbank.account;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import pl.byteit.mbankscraper.util.Printable;
+import pl.byteit.mbankscraper.operation.AccountInfo;
 
 import java.math.BigDecimal;
 
+import static pl.byteit.mbankscraper.operation.AccountInfo.AccountType.STANDARD;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class StandardAccountInfo implements Printable {
+public class StandardAccountInfo {
 
 	private final String number;
 	private final Balance balance;
@@ -27,12 +29,15 @@ public class StandardAccountInfo implements Printable {
 		return balance.currency;
 	}
 
-	@Override
-	public String print() {
-		return String.format("Number: %-36s Balance: %s", number, balance.print());
+	BigDecimal getBalance() {
+		return balance.value;
 	}
 
-	static class Balance implements Printable {
+	public AccountInfo toAccountInfo() {
+		return new AccountInfo(number, balance.value, balance.currency, STANDARD);
+	}
+
+	static class Balance {
 
 		private final BigDecimal value;
 		private final String currency;
@@ -43,9 +48,5 @@ public class StandardAccountInfo implements Printable {
 			this.currency = currency;
 		}
 
-		@Override
-		public String print() {
-			return value.toString() + " " + currency;
-		}
 	}
 }

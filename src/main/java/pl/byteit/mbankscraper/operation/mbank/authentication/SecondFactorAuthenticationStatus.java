@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class AuthenticationStatus {
+class SecondFactorAuthenticationStatus {
 
 	private static final List<String> IN_PROGRESS_STATUSES = Arrays.asList("Prepared", "PreAuthorized");
 	private static final String SUCCESSFUL_STATUS = "Authorized";
@@ -16,7 +16,7 @@ class AuthenticationStatus {
 	private final String status;
 
 	@JsonCreator
-	public AuthenticationStatus(@JsonProperty("Status") String status) {
+	public SecondFactorAuthenticationStatus(@JsonProperty("Status") String status) {
 		this.status = status;
 	}
 
