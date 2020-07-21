@@ -1,28 +1,18 @@
 package pl.byteit.mbankscraper.util;
 
 import org.junit.jupiter.api.Test;
-import pl.byteit.mbankscraper.operation.Credentials;
-import pl.byteit.mbankscraper.operation.mbank.account.StandardAccountInfo;
-
-import java.math.BigDecimal;
+import pl.byteit.mbankscraper.TestDataClass;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static pl.byteit.mbankscraper.TestJsons.singleStandardAccount;
-import static pl.byteit.mbankscraper.operation.mbank.account.StandardAccountInfoAssert.assertThatStandardAccountInfo;
 
 class JsonParserTest {
 
-	private static final String CREDENTIALS_JSON = "{\"UserName\":\"user\",\"Password\":\"passwd\"}";
-	public static final String ACCOUNT_NUMBER = "11 2222 3333 4444 5555 6666 7777";
-	public static final String ACCOUNT_CURRENCY = "PLN";
-	public static final String ACCOUNT_BALANCE = "9280.55";
-
 	@Test
 	void shouldParseObjectIntoJson() {
-		String json = JsonParser.asJson(new Credentials("user".toCharArray(), "passwd".toCharArray()));
+		String json = JsonParser.asJson(TestDataClass.testObject());
 
-		assertThat(json).isEqualTo(CREDENTIALS_JSON);
+		assertThat(json).isEqualTo(TestDataClass.testJson());
 	}
 
 	@Test
@@ -35,33 +25,30 @@ class JsonParserTest {
 
 	@Test
 	void shouldDeserializeCorrectJsonToObject() {
-		StandardAccountInfo account = JsonParser.parse(
-				singleStandardAccount(ACCOUNT_NUMBER, ACCOUNT_BALANCE, ACCOUNT_CURRENCY),
-				TypeReferences.typeOf(StandardAccountInfo.class)
+		TestDataClass parsedObject = JsonParser.parse(
+				TestDataClass.testJson(),
+				TypeReferences.typeOf(TestDataClass.class)
 		);
 
-		assertThatStandardAccountInfo(account)
-				.hasNumber(ACCOUNT_NUMBER)
-				.hasCurrency(ACCOUNT_CURRENCY)
-				.hasBalance(new BigDecimal(ACCOUNT_BALANCE));
+		assertThat(parsedObject).isEqualTo(TestDataClass.testObject());
 	}
 
 	@Test
 	void shouldThrowIllegalStateExceptionWhenJsonCannotBeDeserializedIntoObject() {
 		assertThrows(
 				IllegalStateException.class,
-				() -> JsonParser.parse("{\"field\":\"value\"}", TypeReferences.typeOf(Credentials.class))
+				() -> JsonParser.parse("{\"field\":\"value\"}", TypeReferences.typeOf(TestDataClass.class))
 		);
 	}
 
 	@Test
 	void shouldExtractJsonNodeValueFromSelectedField() {
 		String balanceFieldValue = JsonParser.getFieldRawValueAsString(
-				singleStandardAccount(ACCOUNT_NUMBER, ACCOUNT_BALANCE, ACCOUNT_CURRENCY),
-				"balance"
+				TestDataClass.testJson(),
+				"secondaryValue"
 		);
 
-		assertThat(balanceFieldValue).isEqualTo("{\"value\":" + ACCOUNT_BALANCE + ",\"currency\":\"" + ACCOUNT_CURRENCY + "\"}");
+		assertThat(balanceFieldValue).isEqualTo("\"yet-another-value\"");
 	}
 
 	@Test

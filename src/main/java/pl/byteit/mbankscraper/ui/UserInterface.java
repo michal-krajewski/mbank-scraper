@@ -1,4 +1,4 @@
-package pl.byteit.mbankscraper.util;
+package pl.byteit.mbankscraper.ui;
 
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -26,10 +26,10 @@ public class UserInterface {
 		collection.forEach(this::print);
 	}
 
-	public char[] promptForInput(String message) {
+	public String promptForInput(String message) {
 		print(message);
 
-		return inputSupplier.get().toCharArray();
+		return inputSupplier.get();
 	}
 
 }

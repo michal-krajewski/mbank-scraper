@@ -1,8 +1,8 @@
-package pl.byteit.mbankscraper.operation.mbank.authentication;
+package pl.byteit.mbankscraper.operation.mbank.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-class StartSecondFactorAuthenticationRequest {
+public class StartSecondFactorAuthenticationRequest {
 
 	private static final String SCA_AUTHORIZATION_DISPOSABLE_URL = "sca/authorization/disposable";
 
@@ -21,7 +21,7 @@ class StartSecondFactorAuthenticationRequest {
 		this.url = url;
 	}
 
-	static StartSecondFactorAuthenticationRequest withId(SecondFactorAuthenticationIdentifier identifier) {
+	public static StartSecondFactorAuthenticationRequest withId(SecondFactorAuthenticationIdentifier identifier) {
 		return new StartSecondFactorAuthenticationRequest(identifier, "POST", SCA_AUTHORIZATION_DISPOSABLE_URL);
 	}
 

@@ -1,22 +1,38 @@
 package pl.byteit.mbankscraper.operation;
 
-import pl.byteit.mbankscraper.util.Printable;
+import pl.byteit.mbankscraper.ui.Printable;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class AccountInfo implements Printable {
+public class Account implements Printable {
 
 	private final String name;
 	private final BigDecimal balance;
 	private final String currency;
 	private final AccountType accountType;
 
-	public AccountInfo(String name, BigDecimal balance, String currency, AccountType accountType) {
+	public Account(String name, BigDecimal balance, String currency, AccountType accountType) {
 		this.name = name;
 		this.balance = balance;
 		this.currency = currency;
 		this.accountType = accountType;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public BigDecimal getBalance() {
+		return balance;
+	}
+
+	public String getCurrency() {
+		return currency;
+	}
+
+	public AccountType getAccountType() {
+		return accountType;
 	}
 
 	@Override
@@ -28,9 +44,9 @@ public class AccountInfo implements Printable {
 	public boolean equals(Object o) {
 		if (this == o)
 			return true;
-		if (!(o instanceof AccountInfo))
+		if (!(o instanceof Account))
 			return false;
-		AccountInfo that = (AccountInfo) o;
+		Account that = (Account) o;
 		return name.equals(that.name) &&
 				balance.equals(that.balance) &&
 				currency.equals(that.currency) &&
@@ -46,5 +62,15 @@ public class AccountInfo implements Printable {
 		STANDARD,
 		COMPANY,
 		SAVING
+	}
+
+	@Override
+	public String toString() {
+		return "Account{" +
+				"name='" + name + '\'' +
+				", balance=" + balance +
+				", currency='" + currency + '\'' +
+				", accountType=" + accountType +
+				'}';
 	}
 }

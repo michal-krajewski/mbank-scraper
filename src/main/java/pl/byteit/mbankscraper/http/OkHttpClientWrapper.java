@@ -6,7 +6,8 @@ import pl.byteit.mbankscraper.util.JsonParser;
 import pl.byteit.mbankscraper.util.TypeReferences;
 
 import java.io.IOException;
-import java.util.function.Function;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 
 import static pl.byteit.mbankscraper.util.JsonParser.asJson;
 
@@ -15,8 +16,17 @@ public class OkHttpClientWrapper implements HttpClient {
 
 	private final OkHttpClient client;
 
-	public OkHttpClientWrapper(OkHttpClient client) {
+	private OkHttpClientWrapper(OkHttpClient client) {
 		this.client = client;
+	}
+
+	public static HttpClient httpClientWithCookieHandler() {
+		CookieManager cookieManager = new CookieManager(null, CookiePolicy.ACCEPT_ALL);
+		OkHttpClient okHttpClient = new OkHttpClient.Builder()
+				.cookieJar(new JavaNetCookieJar(cookieManager))
+				.build();
+
+		return new OkHttpClientWrapper(okHttpClient);
 	}
 
 	@Override
@@ -38,7 +48,6 @@ public class OkHttpClientWrapper implements HttpClient {
 		private final String method;
 		private final Request.Builder builder;
 		private boolean containsCustomBody = false;
-		private Function<String, String> responsePreprocessor = Function.identity();
 
 		private HttpRequestBuilder(OkHttpClient client, String method, String requestUrl) {
 			this.client = client;
@@ -69,12 +78,6 @@ public class OkHttpClientWrapper implements HttpClient {
 		}
 
 		@Override
-		public RequestBuilder withResponsePreprocessor(Function<String, String> responsePreprocessor) {
-			this.responsePreprocessor = responsePreprocessor;
-			return this;
-		}
-
-		@Override
 		public void perform() {
 			executeCall();
 		}
@@ -87,10 +90,11 @@ public class OkHttpClientWrapper implements HttpClient {
 		@Override
 		public <T> T perform(TypeReference<T> responseType) {
 			Response response = executeCall();
-
-			String processedResponse = processResponse(response);
-
-			return JsonParser.parse(processedResponse, responseType);
+			try {
+				return JsonParser.parse(response.body().string(), responseType);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 		}
 
 		private Response executeCall() {
@@ -99,14 +103,6 @@ public class OkHttpClientWrapper implements HttpClient {
 				Response response = client.newCall(builder.build()).execute();
 				verifyStatusCodeIsOk(response);
 				return response;
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-		}
-
-		private String processResponse(Response response) {
-			try {
-				return responsePreprocessor.apply(response.body().string());
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}

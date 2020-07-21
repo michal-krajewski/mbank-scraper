@@ -1,10 +1,9 @@
-package pl.byteit.mbankscraper.operation.mbank;
+package pl.byteit.mbankscraper.operation.mbank.data;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import pl.byteit.mbankscraper.http.Header;
 
+import java.beans.ConstructorProperties;
 import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -12,8 +11,8 @@ public class RequestVerificationToken {
 
 	private final String requestVerificationToken;
 
-	@JsonCreator
-	public RequestVerificationToken(@JsonProperty("antiForgeryToken") String requestVerificationToken) {
+	@ConstructorProperties({ "antiForgeryToken" })
+	public RequestVerificationToken(String requestVerificationToken) {
 		this.requestVerificationToken = requestVerificationToken;
 	}
 

@@ -5,9 +5,8 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pl.byteit.mbankscraper.App;
-import pl.byteit.mbankscraper.operation.Credentials;
-import pl.byteit.mbankscraper.operation.mbank.account.StandardAccountInfo;
+import pl.byteit.mbankscraper.TestDataClass;
+import pl.byteit.mbankscraper.operation.mbank.data.Credentials;
 
 import java.math.BigDecimal;
 
@@ -15,8 +14,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static java.lang.Integer.parseInt;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static pl.byteit.mbankscraper.TestJsons.singleStandardAccount;
-import static pl.byteit.mbankscraper.operation.mbank.account.StandardAccountInfoAssert.assertThatStandardAccountInfo;
+import static pl.byteit.mbankscraper.http.OkHttpClientWrapper.httpClientWithCookieHandler;
 
 class OkHttpClientWrapperTest {
 
@@ -37,7 +35,7 @@ class OkHttpClientWrapperTest {
 		System.out.println(port);
 		mockServer = new WireMockServer(port);
 		mockServer.start();
-		httpClient = App.httpClientWithCookieHandler();
+		httpClient = httpClientWithCookieHandler();
 	}
 
 	@AfterAll
@@ -80,37 +78,14 @@ class OkHttpClientWrapperTest {
 		mockServer.stubFor(
 				get(GET_PATH)
 						.willReturn(aResponse()
-								.withBody(singleStandardAccount(ACCOUNT_NUMBER, ACCOUNT_BALANCE.toString(), STANDARD_CURRENCY))
+								.withBody(TestDataClass.testJson())
 						)
 		);
 
-		StandardAccountInfo accountInfo = httpClient.get(urlFor(GET_PATH)).perform(StandardAccountInfo.class);
+		TestDataClass response = httpClient.get(urlFor(GET_PATH)).perform(TestDataClass.class);
 
 		mockServer.verify(1, getRequestedFor(urlEqualTo(GET_PATH)));
-		assertThatStandardAccountInfo(accountInfo)
-				.hasNumber(ACCOUNT_NUMBER)
-				.hasCurrency(STANDARD_CURRENCY)
-				.hasBalance(ACCOUNT_BALANCE);
-	}
-
-	@Test
-	void shouldSendRequestAndParseResponseIntoObjectWithResponsePreprocessing() {
-		mockServer.stubFor(
-				get(GET_PATH)
-						.willReturn(aResponse()
-								.withBody(singleStandardAccount(ACCOUNT_NUMBER, ACCOUNT_BALANCE.toString(), STANDARD_CURRENCY))
-						)
-		);
-
-		StandardAccountInfo accountInfo = httpClient.get(urlFor(GET_PATH))
-				.withResponsePreprocessor(response -> response.replaceAll("PLN", "EUR"))
-				.perform(StandardAccountInfo.class);
-
-		mockServer.verify(1, getRequestedFor(urlEqualTo(GET_PATH)));
-		assertThatStandardAccountInfo(accountInfo)
-				.hasNumber(ACCOUNT_NUMBER)
-				.hasCurrency("EUR")
-				.hasBalance(ACCOUNT_BALANCE);
+		assertThat(response).isEqualTo(TestDataClass.testObject());
 	}
 
 	@Test
@@ -146,7 +121,7 @@ class OkHttpClientWrapperTest {
 		mockServer.stubFor(post(POST_PATH));
 
 		httpClient.post(urlFor(POST_PATH))
-				.withJsonBody(credentials("user", "passwd"))
+				.withJsonBody(new Credentials("user", "passwd"))
 				.perform();
 
 		mockServer.verify(
@@ -154,10 +129,6 @@ class OkHttpClientWrapperTest {
 				postRequestedFor(urlEqualTo(POST_PATH))
 						.withRequestBody(equalTo("{\"UserName\":\"user\",\"Password\":\"passwd\"}"))
 		);
-	}
-
-	private static Credentials credentials(String username, String password) {
-		return new Credentials(username.toCharArray(), password.toCharArray());
 	}
 
 	private static String urlFor(String path) {

@@ -1,4 +1,4 @@
-package pl.byteit.mbankscraper.util;
+package pl.byteit.mbankscraper.ui;
 
 public interface Printable {
 

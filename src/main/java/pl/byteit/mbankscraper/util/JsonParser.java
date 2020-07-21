@@ -2,6 +2,7 @@ package pl.byteit.mbankscraper.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JsonParser {
@@ -14,6 +15,10 @@ public class JsonParser {
 		} catch (JsonProcessingException e) {
 			throw new IllegalStateException("Could not parse field " + fieldName, e);
 		}
+	}
+
+	public static String getFieldRawValueAsString(JsonNode jsonNode, String fieldName) {
+		return jsonNode.path(fieldName).toString();
 	}
 
 	public static String asJson(Object object) {

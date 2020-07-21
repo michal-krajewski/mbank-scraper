@@ -2,8 +2,6 @@ package pl.byteit.mbankscraper.http;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-import java.util.function.Function;
-
 public interface HttpClient {
 
 	RequestBuilder post(String url);
@@ -14,8 +12,6 @@ public interface HttpClient {
 		RequestBuilder withJsonBody(Object body);
 
 		RequestBuilder withHeader(Header header);
-
-		RequestBuilder withResponsePreprocessor(Function<String, String> responsePreprocessor);
 
 		void perform();
 

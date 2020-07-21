@@ -4,9 +4,9 @@ import java.util.List;
 
 public interface BankClient {
 
-	AuthenticationResult login(Credentials credentials);
+	AuthenticationStatus login(String login, String password);
 
-	AuthenticationResult authenticateWithSecondFactor();
+	AuthenticationStatus authenticateWithSecondFactor();
 
-	List<AccountInfo> getAccounts();
+	List<Account> getAccounts();
 }

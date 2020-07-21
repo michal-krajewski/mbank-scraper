@@ -1,14 +1,11 @@
 package pl.byteit.mbankscraper.http.mock;
 
 import pl.byteit.mbankscraper.http.HttpClient;
-import pl.byteit.mbankscraper.http.mock.RequestBuilderMock.MockRequestBuilderAssert;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static java.util.stream.Collectors.toList;
 
 public class HttpClientMock implements HttpClient {
 
@@ -41,20 +38,6 @@ public class HttpClientMock implements HttpClient {
 	public void reset() {
 		savedRequests.clear();
 		mockedResponses.clear();
-	}
-
-	public MockRequestBuilderAssert verify(String url) {
-		return verify(1, url).get(0);
-	}
-
-	public List<MockRequestBuilderAssert> verify(int requestAmount, String url) {
-		List<RequestBuilderMock> builders = savedRequests.get(url);
-		if (builders.size() != requestAmount) {
-			throw new RuntimeException("Expected " + requestAmount + " requests builder, but was " + builders.size());
-		}
-		return builders.stream()
-				.map(MockRequestBuilderAssert::assertThatMockRequestBuilder)
-				.collect(toList());
 	}
 
 	String getMockedResponse(String url) {

@@ -1,11 +1,11 @@
-package pl.byteit.mbankscraper.operation.mbank.authentication;
+package pl.byteit.mbankscraper.operation.mbank.data;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class SecondFactorAuthenticationIdentifier {
+public class SecondFactorAuthenticationIdentifier {
 
 	@JsonProperty("ScaAuthorizationId")
 	private final String identifier;
@@ -15,7 +15,7 @@ class SecondFactorAuthenticationIdentifier {
 		this.identifier = identifier;
 	}
 
-	static class FinalizeAuthenticationRequest {
+	public static class FinalizeAuthenticationRequest {
 
 		@JsonProperty("scaAuthorizationId")
 		private final String identifier;
@@ -24,7 +24,7 @@ class SecondFactorAuthenticationIdentifier {
 			this.identifier = identifier;
 		}
 
-		static FinalizeAuthenticationRequest withIdentifier(SecondFactorAuthenticationIdentifier identifier) {
+		public static FinalizeAuthenticationRequest withIdentifier(SecondFactorAuthenticationIdentifier identifier) {
 			return new FinalizeAuthenticationRequest(identifier.identifier);
 		}
 
