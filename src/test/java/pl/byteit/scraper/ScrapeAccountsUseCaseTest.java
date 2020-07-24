@@ -6,14 +6,16 @@ import org.mockito.Mock;
 import pl.byteit.scraper.operation.Account;
 import pl.byteit.scraper.operation.BankClient;
 import pl.byteit.scraper.operation.ScrapeAccountsUseCase;
+import pl.byteit.scraper.operation.exception.InvalidCredentials;
+import pl.byteit.scraper.operation.exception.SecondFactorAuthenticationFailed;
 import pl.byteit.scraper.ui.UserInterface;
 
 import java.math.BigDecimal;
 
 import static java.util.Arrays.asList;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static pl.byteit.scraper.operation.Account.AccountType.SAVING;
 import static pl.byteit.scraper.operation.Account.AccountType.STANDARD;
@@ -63,6 +65,29 @@ class ScrapeAccountsUseCaseTest {
 		scrapeAccountsUseCase.start();
 
 		verify(userInterface).print(asList(STANDARD_ACCOUNT, SAVING_ACCOUNT));
+	}
+
+	@Test
+	void shouldThrowInvalidCredentialsWhenClientThrowsInvalidCredentials() {
+		when(userInterface.promptForInput(anyString())).thenReturn(LOGIN, PASSWORD);
+		when(bankClient.login(LOGIN, PASSWORD)).thenThrow(new InvalidCredentials());
+
+		assertThrows(
+				InvalidCredentials.class,
+				() -> scrapeAccountsUseCase.start()
+		);
+	}
+
+	@Test
+	void shouldThrowSecondFactorAuthenticationFailedWhenClientThrowsSecondFactorAuthenticationFailed() {
+		when(userInterface.promptForInput(anyString())).thenReturn(LOGIN, PASSWORD);
+		when(bankClient.login(LOGIN, PASSWORD)).thenReturn(SECOND_FACTOR_AUTHENTICATION_REQUIRED);
+		doThrow(new SecondFactorAuthenticationFailed("Invalid status")).when(bankClient).authenticateWithSecondFactor();
+
+		assertThrows(
+				SecondFactorAuthenticationFailed.class,
+				() -> scrapeAccountsUseCase.start()
+		);
 	}
 
 }
