@@ -11,8 +11,8 @@ import pl.byteit.scraper.mbank.model.SecondFactorAuthenticationStatus;
 import pl.byteit.scraper.operation.Account;
 import pl.byteit.scraper.operation.Account.AccountType;
 import pl.byteit.scraper.operation.AuthenticationStatus;
-import pl.byteit.scraper.operation.exception.AuthenticationFailed;
 import pl.byteit.scraper.operation.exception.InvalidCredentials;
+import pl.byteit.scraper.operation.exception.SecondFactorAuthenticationFailed;
 import pl.byteit.scraper.util.Await;
 
 import java.math.BigDecimal;
@@ -121,7 +121,7 @@ class MbankClientTest {
 					.thenReturn(new SecondFactorAuthenticationStatus("Failed"));
 
 			assertThrows(
-					AuthenticationFailed.class,
+					SecondFactorAuthenticationFailed.class,
 					() -> mbankClient.authenticateWithSecondFactor()
 			);
 		}
@@ -135,7 +135,7 @@ class MbankClientTest {
 					.thenReturn(new SecondFactorAuthenticationStatus("Prepared"));
 
 			assertThrows(
-					AuthenticationFailed.class,
+					SecondFactorAuthenticationFailed.class,
 					() -> mbankClient.authenticateWithSecondFactor()
 			);
 		}

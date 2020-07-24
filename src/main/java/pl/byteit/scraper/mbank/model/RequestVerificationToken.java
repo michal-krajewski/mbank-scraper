@@ -1,12 +1,10 @@
 package pl.byteit.scraper.mbank.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import pl.byteit.scraper.http.Header;
 
 import java.beans.ConstructorProperties;
 import java.util.Objects;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class RequestVerificationToken {
 
 	private final String requestVerificationToken;

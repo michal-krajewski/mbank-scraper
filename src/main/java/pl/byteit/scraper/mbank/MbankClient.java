@@ -7,8 +7,8 @@ import pl.byteit.scraper.mbank.model.*;
 import pl.byteit.scraper.operation.Account;
 import pl.byteit.scraper.operation.AuthenticationStatus;
 import pl.byteit.scraper.operation.BankClient;
-import pl.byteit.scraper.operation.exception.AuthenticationFailed;
 import pl.byteit.scraper.operation.exception.InvalidCredentials;
+import pl.byteit.scraper.operation.exception.SecondFactorAuthenticationFailed;
 import pl.byteit.scraper.util.Await;
 import pl.byteit.scraper.util.JsonParser;
 import pl.byteit.scraper.util.TypeReferences;
@@ -21,14 +21,13 @@ import static pl.byteit.scraper.mbank.RequestUrls.*;
 import static pl.byteit.scraper.util.JsonParser.getFieldRawValueAsString;
 
 public class MbankClient implements BankClient {
-	private final HttpClient httpClient;
 
+	private static final String SCA_AUTHORIZATION_DISPOSABLE_URL = "sca/authorization/disposable";
+
+	private final HttpClient httpClient;
 	private final Await await;
 
-	public MbankClient(
-			HttpClient httpClient,
-			Await await
-	) {
+	public MbankClient(HttpClient httpClient, Await await) {
 		this.httpClient = httpClient;
 		this.await = await;
 	}
@@ -74,7 +73,7 @@ public class MbankClient implements BankClient {
 	) {
 		return httpClient.post(START_SECOND_FACTOR_AUTHENTICATION_URL)
 				.withHeader(requestVerificationHeader)
-				.withJsonBody(StartSecondFactorAuthenticationRequest.withId(identifier))
+				.withJsonBody(startSecondFactorAuthenticationRequest(identifier))
 				.fetch(TransactionId.class);
 	}
 
@@ -102,7 +101,6 @@ public class MbankClient implements BankClient {
 		httpClient.post(EXECUTE_AUTHENTICATION_URL)
 				.withHeader(requestVerificationHeader)
 				.fetch();
-
 		httpClient.post(FINALIZE_AUTHENTICATION_URL)
 				.withHeader(requestVerificationHeader)
 				.withJsonBody(new FinalizeAuthenticationRequest(identifier))
@@ -111,8 +109,7 @@ public class MbankClient implements BankClient {
 
 	private static void assertAuthenticated(SecondFactorAuthenticationStatus secondFactorAuthenticationStatus) {
 		if (!secondFactorAuthenticationStatus.isSuccessful())
-			throw new AuthenticationFailed("Authentication failed with status: " + secondFactorAuthenticationStatus.status);
-
+			throw new SecondFactorAuthenticationFailed("Authentication failed with status: " + secondFactorAuthenticationStatus.status);
 	}
 
 	@Override
@@ -137,10 +134,7 @@ public class MbankClient implements BankClient {
 		return extractListOfSavingAccounts(rawResponse);
 	}
 
-	private static List<Account> mapToAccounts(
-			List<StandardAccount> standardAccounts,
-			List<SavingAccount> savingAccounts
-	) {
+	private static List<Account> mapToAccounts(List<StandardAccount> standardAccounts, List<SavingAccount> savingAccounts) {
 		return Stream.concat(
 				standardAccounts.stream().map(ResponseMapper::asAccount),
 				savingAccounts.stream().map(account -> ResponseMapper.asAccount(account, standardAccounts))
@@ -160,6 +154,12 @@ public class MbankClient implements BankClient {
 				getFieldRawValueAsString(response, "goals"),
 				TypeReferences.listTypeOf(SavingAccount.class)
 		);
+	}
+
+	private static StartSecondFactorAuthenticationRequest startSecondFactorAuthenticationRequest(
+			SecondFactorAuthenticationIdentifier identifier
+	) {
+		return new StartSecondFactorAuthenticationRequest(identifier, "POST", SCA_AUTHORIZATION_DISPOSABLE_URL);
 	}
 
 }

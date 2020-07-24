@@ -7,14 +7,12 @@ import pl.byteit.scraper.mbank.model.StandardAccount;
 import pl.byteit.scraper.mbank.model.StandardAccount.Balance;
 import pl.byteit.scraper.operation.Account;
 import pl.byteit.scraper.operation.AuthenticationStatus;
-import pl.byteit.scraper.operation.exception.AuthenticationFailed;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static pl.byteit.scraper.operation.Account.AccountType.SAVING;
 import static pl.byteit.scraper.operation.Account.AccountType.STANDARD;
 
@@ -38,14 +36,6 @@ class ResponseMapperTest {
 		AuthenticationStatus authenticationStatus = ResponseMapper.asAuthenticationStatus(loginResponse);
 
 		assertThat(authenticationStatus).isEqualTo(AuthenticationStatus.SECOND_FACTOR_AUTHENTICATION_REQUIRED);
-	}
-
-	@Test
-	void shouldThrowIllegalStateExceptionWhenTryingToMapNotSuccessfulLoginResponse() {
-		assertThrows(
-				AuthenticationFailed.class,
-				() -> ResponseMapper.asAuthenticationStatus(new LoginResponse(false, "/any"))
-		);
 	}
 
 	@Test

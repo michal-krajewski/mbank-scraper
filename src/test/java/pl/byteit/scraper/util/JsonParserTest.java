@@ -37,7 +37,7 @@ class JsonParserTest {
 	void shouldThrowIllegalStateExceptionWhenJsonCannotBeDeserializedIntoObject() {
 		assertThrows(
 				IllegalStateException.class,
-				() -> JsonParser.parse("{\"field\":\"value\"}", TypeReferences.typeOf(TestDataClass.class))
+				() -> JsonParser.parse("{\"field\"}", TypeReferences.typeOf(TestDataClass.class))
 		);
 	}
 

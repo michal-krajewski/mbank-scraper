@@ -5,7 +5,6 @@ import pl.byteit.scraper.mbank.model.SavingAccount;
 import pl.byteit.scraper.mbank.model.StandardAccount;
 import pl.byteit.scraper.operation.Account;
 import pl.byteit.scraper.operation.AuthenticationStatus;
-import pl.byteit.scraper.operation.exception.AuthenticationFailed;
 
 import java.util.List;
 
@@ -17,9 +16,6 @@ public class ResponseMapper {
 	private static final String SECOND_FACTOR_REQUIRED_REDIRECT_URL = "/authorization";
 
 	public static AuthenticationStatus asAuthenticationStatus(LoginResponse loginResponse) {
-		if (!loginResponse.successful) {
-			throw new AuthenticationFailed("Login response status must be successful");
-		}
 		return SECOND_FACTOR_REQUIRED_REDIRECT_URL.equals(loginResponse.redirectUrl) ?
 				AuthenticationStatus.SECOND_FACTOR_AUTHENTICATION_REQUIRED :
 				AuthenticationStatus.AUTHENTICATED;

@@ -1,12 +1,9 @@
 package pl.byteit.scraper.mbank.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.beans.ConstructorProperties;
 import java.util.Arrays;
 import java.util.List;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class SecondFactorAuthenticationStatus {
 
 	private static final List<String> IN_PROGRESS_STATUSES = Arrays.asList("Prepared", "PreAuthorized");

@@ -19,22 +19,6 @@ public class Account implements Printable {
 		this.accountType = accountType;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public BigDecimal getBalance() {
-		return balance;
-	}
-
-	public String getCurrency() {
-		return currency;
-	}
-
-	public AccountType getAccountType() {
-		return accountType;
-	}
-
 	@Override
 	public String print() {
 		return String.format("Account: %-36s Type: %-9s Balance: %s %s", name, accountType.name(), balance.toString(), currency);
@@ -58,12 +42,6 @@ public class Account implements Printable {
 		return Objects.hash(name, balance, currency, accountType);
 	}
 
-	public enum AccountType {
-		STANDARD,
-		COMPANY,
-		SAVING
-	}
-
 	@Override
 	public String toString() {
 		return "Account{" +
@@ -72,5 +50,10 @@ public class Account implements Printable {
 				", currency='" + currency + '\'' +
 				", accountType=" + accountType +
 				'}';
+	}
+
+	public enum AccountType {
+		STANDARD,
+		SAVING
 	}
 }

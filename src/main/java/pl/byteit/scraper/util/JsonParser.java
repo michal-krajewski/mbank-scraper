@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JsonParser {
 
-	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+	private static final ObjectMapper OBJECT_MAPPER = ObjectMapperFactory.objectMapper();
 
 	public static String getFieldRawValueAsString(String json, String fieldName) {
 		try {

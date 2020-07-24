@@ -21,10 +21,7 @@ public class App {
 	}
 
 	private static MbankClient mBankClient(HttpClient client) {
-		return new MbankClient(
-				client,
-				new Await()
-		);
+		return new MbankClient(client, new Await());
 	}
 
 	private static UserInterface commandLineInterface() {

@@ -8,7 +8,7 @@ import java.util.List;
 
 public class TypeReferences {
 
-	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+	private static final ObjectMapper OBJECT_MAPPER = ObjectMapperFactory.objectMapper();
 
 	public static <T> TypeReference<List<T>> listTypeOf(Class<T> aClass) {
 		return new TypeReference<List<T>>() {

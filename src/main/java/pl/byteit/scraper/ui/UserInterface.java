@@ -28,7 +28,6 @@ public class UserInterface {
 
 	public String promptForInput(String message) {
 		print(message);
-
 		return inputSupplier.get();
 	}
 

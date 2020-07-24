@@ -9,4 +9,5 @@ public interface BankClient {
 	void authenticateWithSecondFactor();
 
 	List<Account> getAccounts();
+
 }

@@ -1,11 +1,8 @@
 package pl.byteit.scraper.mbank.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.beans.ConstructorProperties;
 import java.math.BigDecimal;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class StandardAccount {
 
 	public final String number;
